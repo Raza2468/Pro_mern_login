@@ -30,15 +30,14 @@ const sub = () => {
     .then(function (response) {
         console.log(response.data.message);
         alert(response.data.message);
-        window.location.href = "profile.html";
-
+        
     })
     .catch(function (error) {
-       
-            alert(error)
+        
+        alert(error)
         
     });
-
+    
     return false;
 }
 
@@ -48,7 +47,7 @@ const sub = () => {
 let sin = () => {
     var email = document.getElementById("emailsin").value
     var password = document.getElementById("passwordsin").value;
-
+    
     axios({
         method: 'post',
         url: 'http://localhost:3001/auth/login',
@@ -62,7 +61,8 @@ let sin = () => {
         console.log(response.data.message);
         alert(response.data.message);
         // window.location.href = "profile.html";
-
+        
+        window.location.href = "profile.html";
     })
     .catch(function (error) {
        
