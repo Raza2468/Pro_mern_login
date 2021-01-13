@@ -30,7 +30,7 @@ const sub = () => {
     .then(function (response) {
         console.log(response.data.message);
         alert(response.data.message);
-        window.location.href = "";
+        window.location.href = "profile.html";
 
     })
     .catch(function (error) {

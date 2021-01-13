@@ -9,6 +9,7 @@ var jwt = require('jsonwebtoken'); // https://github.com/auth0/node-jsonwebtoken
 var path = require("path")
 var { getUser } = require("./dberor/models")
 var authRoutes = require("./routes/auth");
+// var { ServerSecretKey } = require("./core/index")
 
 console.log("getUser: ", getUser);
 
