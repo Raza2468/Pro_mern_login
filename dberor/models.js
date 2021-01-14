@@ -1,7 +1,6 @@
 const mongoose = require("mongoose");
 
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 // let dbURI = "mongodb+srv://dbuser:dbpassword@cluster0.9qvbs.mongodb.net/abc-database";
 let dbURI = "mongodb+srv://faiz:2468@mundodb.lkd4g.mongodb.net/ttest?retryWrites=true&w=majority";

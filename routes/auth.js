@@ -1,11 +1,11 @@
 var express = require("express");
 var bcrypt = require("bcrypt-inzi");
 var jwt = require('jsonwebtoken'); // https://github.com/auth0/node-jsonwebtoken
-var { ServerSecretKey} = require("../core/index");
+var { ServerSecretKey } = require("../core/index");
 // var client = new postmark.Client("ENTER YOUR POSTMARK TOKEN");
 // var client = new postmark.Client("a9885685-bb87-4afd-adc6-9acd390f74b7");
 
-var { getUser,otpModel} = require("../dberor/models");
+var { getUser, otpModel } = require("../dberor/models");
 console.log("getUser: ", getUser)
 
 var appxml = express.Router();
@@ -192,7 +192,7 @@ appxml.post('/forget-password', (req, res, next) => {
 
 function getRandomArbitrary(min, max) {
     return Math.random() * (max - min) + min;
-} 
+}
 
 // =======================export
 module.exports = appxml;
