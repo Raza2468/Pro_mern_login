@@ -12,14 +12,19 @@ window.onclick = function (event) {
     }
 }
 //  ========>
+var modale = document.getElementById('id01e');
+window.onclick = function (event) {
+    if (event.target == modale) {
+        modale.style.display = "none";
+    }
+}
 //  ========>
 //  ========>
-
+//  ========>
 const sub = () => {
     let namei = document.getElementById("name").value
     let emaili = document.getElementById("email").value
     let passwordi = document.getElementById("password").value
-
 
     axios({
         method: 'post',
@@ -82,14 +87,45 @@ let sin = () => {
 
 // ==============>//====================>
 
+// ========= emailotp
+
+function emailotp() {
+    var email = document.getElementById("email")
+
+    axios({
+        method: 'post',
+        url: 'http://localhost:3001/auth/forget-password',
+        // url: 'https://databaselogin.herokuapp.com/auth/login',
+        data: {
+            email: email,
+        },
+        // withCredentials: true
+    })
+        .then(function (response) {
+            console.log(response.data.message);
+            alert(response.data.message);
+            // window.location.href = "profile.html";
+
+            // window.location.href = "profile.html";
+        })
+        .catch(function (error) {
+
+            alert(error.message)
+
+        });
+    return false;
+
+}
+// ================ conform
+
 function conform() {
     var textfor = document.getElementById("textfor")
     var passfor = document.getElementById("passfor")
     var repassfor = document.getElementById("repassfor")
     axios({
         method: 'post',
-        // url: 'http://localhost:3001/auth/forget-password',
-        url: 'https://databaselogin.herokuapp.com/auth/login',
+        url: 'http://localhost:3001/auth/forget-password-step-2',
+        // url: 'https://databaselogin.herokuapp.com/auth/login',
         data: {
             textfor: textfor,
             passfor: passfor,

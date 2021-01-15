@@ -2,8 +2,9 @@ var express = require("express");
 var bcrypt = require("bcrypt-inzi");
 var jwt = require('jsonwebtoken'); // https://github.com/auth0/node-jsonwebtoken
 var { ServerSecretKey } = require("../core/index");
+var postmark = require('postmark')
+var client = new postmark.Client("fa2f6eae-eaa6-4389-98f0-002e6fc5b900");
 // var client = new postmark.Client("ENTER YOUR POSTMARK TOKEN");
-// var client = new postmark.Client("a9885685-bb87-4afd-adc6-9acd390f74b7");
 
 var { getUser, otpModel } = require("../dberor/models");
 console.log("getUser: ", getUser)
@@ -148,7 +149,7 @@ appxml.post('/forget-password', (req, res, next) => {
         please send email in json body.
         e.g:
         {
-            "email": "malikasinger@gmail.com"
+            "email": "faizeraza2468@gmail.com"
         }`)
         return;
     }
@@ -167,7 +168,7 @@ appxml.post('/forget-password', (req, res, next) => {
                     otpCode: otp
                 }).then((doc) => {
                     client.sendEmail({
-                        "From": "info@arabianconsult.com",
+                        "From": "faiz_student@sysborg.com",
                         "To": req.body.email,
                         "Subject": "Reset your password",
                         "TextBody": `Here is your pasword reset code: ${otp}`
@@ -188,6 +189,11 @@ appxml.post('/forget-password', (req, res, next) => {
         })
 
 })
+
+
+
+
+
 
 
 function getRandomArbitrary(min, max) {

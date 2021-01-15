@@ -75,53 +75,86 @@
             <button type="submit" class="btn btn-danger btn-default pull-left" data-dismiss="modal"><span
                 class="glyphicon glyphicon-remove"></span> Cancel</button>
 
-            <!-- =================== -->
-
-
-
-            <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;"
+            <button onclick="document.getElementById('id01e').style.display='block'" style="width:auto;"
               class="btn btn-danger btn-default pull-right">Forgotpassword?</button>
+            <!-- <button onclick="document.getElementById('id01e').style.display='block'"
+              style="width:auto;">Loginnnn</button> -->
+          </div>
 
-            <div id="id01" class="modali">
-              <span onclick="document.getElementById('id01').style.display='none'" class="closei"
+          <!-- =================== -->
+        </div>
+
+        <!--  -->
+        <!--  -->
+        <!--  -->
+        <div id="id01e" class="modalee">
+
+          <form class="modalee-content animatee" onsubmit="return emailotp()">
+            <div class="imgcontainere">
+              <span onclick="document.getElementById('id01e').style.display='none'" class="closee"
                 title="Close Modal">&times;</span>
-              <form class="modali-content" onsubmit="return conform()">
-                <div class="containeri">
-                  <h3>Sign Up</h3>
-                  <p>Please fill in this form to create an account.</p>
-                  <hr>
-                  <label for="email"><b>Email</b></label>
-                  <input type="texti" placeholder="Enter Email" name="email" id="emailfor">
-
-                  <label for="psw"><b>Password</b></label>
-                  <input type="passwordi" placeholder="Enter Password" name="psw" id="passfor">
-
-                  <label for="psw-repeat"><b>Repeat Password</b></label>
-                  <input type="password" placeholder="Repeat Password" name="psw-repeat" id="repassfor">
-
-
-
-                  <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.
-                  </p>
-
-                  <div class="clearfixi">
-                    <button type="button" onclick="document.getElementById('id01').style.display='none'"
-                      class="cancelbtni">Cancel</button>
-                    <button class="signupbtni" type="submit">conform Sign Up</button>
-                  </div>
-                </div>
-              </form>
-
+              <img src="img_avatar2.png" alt="Avatar" class="avatare">
             </div>
 
+            <div class="containere">
+              <label for="unamee"><b>Email</b></label>
+              <input type="email" class="emailotp" id="email" placeholder="Enter email">
+
+              <button id="buttone" type="submit"
+                onclick="document.getElementById('id01').style.display='block'">Login</button>
+
+          </form>
+
+          <div class="modal-footer">
+            <span class="btn btn-danger btn-default pull-left"
+              onclick="document.getElementById('id01e').style.display='none'"><span
+                class="glyphicon glyphicon-remove"></span> Cancel</span>
           </div>
+
         </div>
+      </div>
+
+
+      <!--  -->
+      <!--  -->
+      <!--  -->
+
+      <div id="id01" class="modali">
+        <span onclick="document.getElementById('id01').style.display='none'" class="closei"
+          title="Close Modal">&times;</span>
+        <form class="modali-content" onsubmit="return conform()">
+          <div class="containeri">
+            <h3>Sign Up</h3>
+            <p>Please fill in this form to create an account.</p>
+            <hr>
+            <label for="email"><b>Email</b></label>
+            <input type="texti" placeholder="Enter Email" name="email" id="emailfor">
+
+            <label for="psw"><b>Password</b></label>
+            <input type="passwordi" placeholder="Enter Password" name="psw" id="passfor">
+
+            <label for="psw-repeat"><b>Repeat Password</b></label>
+            <input type="password" placeholder="Repeat Password" name="psw-repeat" id="repassfor">
+
+
+
+            <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.
+            </p>
+
+            <div class="clearfixi">
+              <button type="button" onclick="document.getElementById('id01').style.display='none'"
+                class="cancelbtni">Cancel</button>
+              <button class="signupbtni" type="submit" onclick='al()'>Send</button>
+
+
+            </div>
+          </div>
+        </form>
 
       </div>
     </div>
   </div>
-
-
+  </div>
 
   <script src="app.js"></script>
 </body>
