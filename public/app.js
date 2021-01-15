@@ -90,7 +90,8 @@ let sin = () => {
 // ========= emailotp
 
 function emailotp() {
-    var email = document.getElementById("email")
+    var email = document.getElementById("emailsin").value;
+    console.log(email);
 
     axios({
         method: 'post',
