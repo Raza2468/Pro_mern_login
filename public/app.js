@@ -120,17 +120,20 @@ function emailotp() {
 // ================ conform
 
 function conform() {
-    var textfor = document.getElementById("textfor")
-    var passfor = document.getElementById("passfor")
-    var repassfor = document.getElementById("repassfor")
+    var otp = document.getElementById("otpcon").value
+    var email = document.getElementById("emailcon").value
+    var newPassword = document.getElementById("newPassword").value
+    console.log(otp);
+    console.log(email);
+    console.log(newPassword);
     axios({
         method: 'post',
         url: 'http://localhost:3001/auth/forget-password-step-2',
         // url: 'https://databaselogin.herokuapp.com/auth/login',
         data: {
-            textfor: textfor,
-            passfor: passfor,
-            repassfor: repassfor,
+            otp: otp,
+            email: email,
+            newPassword: newPassword,
         },
         // withCredentials: true
     })

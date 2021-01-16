@@ -169,14 +169,17 @@ appxml.post('/forget-password', (req, res, next) => {
                 }).then((doc) => {
                     client.sendEmail({
                         "From": "faiz_student@sysborg.com",
-                        
+
                         "To": req.body.email,
                         "Subject": "Reset your password",
                         "TextBody": `Here is your pasword reset code: ${otp}`
                     })
                 }).then((status) => {
                     console.log("status: ", status);
-                    res.send("email sent with otp")
+                    res.send
+                        ({
+                            message: "email sent with otp",
+                        })
                 }).catch((err) => {
                     console.log("error in creating otp: ", err);
                     res.status(500).send("unexpected error ")
@@ -193,6 +196,73 @@ appxml.post('/forget-password', (req, res, next) => {
 
 
 
+
+appxml.post('/forget-password-step-2', (req, res, next) => {
+    if (!req.body.email && !req.body.otp && !req.body.newPassword) {
+        res.status(403).send(`
+            please send email & otp in json body.
+            e.g:
+            {
+                "email": "malikasinger@gmail.com",
+                "newPassword": "xxxxxx",
+                "otp": "xxxxx" 
+            }`)
+        return;
+    }
+    getUser.findOne({ email: req.body.email },
+        function (err, user) {
+            if (err) {
+                res.status(500).send({
+                    message: "an error occured: " + JSON.stringify(err)
+                });
+            } else if (user) {
+
+                otpModel.find({ email: req.body.email },
+                    function (err, otpData) {
+
+                        if (err) {
+                            res.status(500).send({
+                                message: "an error occured: " + JSON.stringify(err)
+                            });
+                        } else if (otpData) {
+                            otpData = otpData[otpData.length - 1]
+
+                            console.log("otpData: ", otpData);
+
+                            const now = new Date().getTime();
+                            const otpIat = new Date(otpData.createdOn).getTime(); // 2021-01-06T13:08:33.657+0000
+                            const diff = now - otpIat; // 300000 5 minute
+
+                            console.log("diff: ", diff);
+
+                            if (otpData.otpCode === req.body.otp && diff < 300000) { // correct otp code
+                                otpData.remove()
+
+                                bcrypt.stringToHash(req.body.newPassword).then(function (hash) {
+                                    user.update({ password: hash }, {}, function (err, data) {
+                                        res.send("password updated");
+                                    })
+                                })
+
+                            } else {
+                                res.status(401).send({
+                                    message: "incorrect otp"
+                                });
+                            }
+                        } else {
+                            res.status(401).send({
+                                message: "incorrect otp"
+                            });
+                        }
+                    })
+
+            } else {
+                res.status(403).send({
+                    message: "user not found"
+                });
+            }
+        });
+})
 
 
 
