@@ -74,7 +74,7 @@ let sin = () => {
             alert(response.data.message);
             // window.location.href = "profile.html";
 
-            window.location.href = "profile.html";
+            window.location.href = "dashboard/profile.html";
         })
         .catch(function (error) {
 
@@ -142,7 +142,7 @@ function conform() {
             alert(response.data.message);
             // window.location.href = "profile.html";
 
-            window.location.href = "profile.html";
+            // window.location.href = "/dashboard/profile.html";
         })
         .catch(function (error) {
 
@@ -152,3 +152,11 @@ function conform() {
     return false;
 
 }
+
+
+
+// ============================>>>>>>>>>>>>>>>>
+// ============================>>>>>>>>>>>>>>>>
+
+
+
