@@ -169,6 +169,7 @@ appxml.post('/forget-password', (req, res, next) => {
                 }).then((doc) => {
                     client.sendEmail({
                         "From": "faiz_student@sysborg.com",
+                        
                         "To": req.body.email,
                         "Subject": "Reset your password",
                         "TextBody": `Here is your pasword reset code: ${otp}`

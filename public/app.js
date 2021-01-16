@@ -61,8 +61,8 @@ let sin = () => {
 
     axios({
         method: 'post',
-        // url: 'http://localhost:3001/auth/login',
-        url: 'https://databaselogin.herokuapp.com/auth/login',
+        url: 'http://localhost:3001/auth/login',
+        // url: 'https://databaselogin.herokuapp.com/auth/login',
         data: {
             email: email,
             password: password,
@@ -90,7 +90,7 @@ let sin = () => {
 // ========= emailotp
 
 function emailotp() {
-    var email = document.getElementById("emailsin").value;
+    var email = document.getElementById("emotp");
     console.log(email);
 
     axios({
@@ -98,7 +98,7 @@ function emailotp() {
         url: 'http://localhost:3001/auth/forget-password',
         // url: 'https://databaselogin.herokuapp.com/auth/login',
         data: {
-            email: email,
+            email: email.value,
         },
         // withCredentials: true
     })
