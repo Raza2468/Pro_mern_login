@@ -6,8 +6,9 @@ var postmark = require('postmark')
 var client = new postmark.Client("fa2f6eae-eaa6-4389-98f0-002e6fc5b900");
 // var client = new postmark.Client("ENTER YOUR POSTMARK TOKEN");
 
-var { getUser, otpModel } = require("../dberor/models");
+var { getUser, otpModel, text } = require("../dberor/models");
 console.log("getUser: ", getUser)
+console.log("getUsertext: ", text)
 
 var appxml = express.Router();
 // var ServerSecretKey = process.env.SECRET || "123";
@@ -264,7 +265,41 @@ appxml.post('/forget-password-step-2', (req, res, next) => {
         });
 })
 
+// =============>
 
+
+appxml.post('/dashboard', (req, res, next) => {
+    if (!req.body.text) {
+        res.status(403).send(`
+            please send email & otp in json body.
+            e.g:
+            {
+                "text": "xyz" 
+            }`)
+        return;
+    }
+    getUser.findOne({ email: req.body.email },
+        function (err, user) {
+            if (err) {
+                res.status(500).send({
+                    message: "an error occured: " + JSON.stringify(err)
+                });
+            } else if (user) {
+                otpModel.chat({ email: req.body.email },
+                    function (err, text) {
+
+                        if (err) {
+                            res.status(500).send({
+                                message: "an error occured: " + JSON.stringify(err)
+                            });
+                        } else {
+                            console.log(text);
+                        }
+                    })
+            }
+        })
+
+})
 
 
 function getRandomArbitrary(min, max) {

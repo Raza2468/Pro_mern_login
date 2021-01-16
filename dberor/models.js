@@ -43,17 +43,31 @@ var userSchema = new mongoose.Schema({
     createdOn: { type: Date, 'default': Date.now },
     activeSince: Date,
 });
+var getUser = mongoose.model("users", userSchema);
 
 
 // =======================export
-var getUser = mongoose.model("users", userSchema);
 var otpSchema = new mongoose.Schema({
     "email": String,
     "otpCode": String,
     "createdOn": { "type": Date, "default": Date.now },
 });
 var otpModel = mongoose.model("otps", otpSchema);
+
+// =======================export
+
+var textSchema = new mongoose.Schema({
+    "email": String,
+    "text": String,
+    "createdOn": { "type": Date, "default": Date.now },
+    
+});
+var text = mongoose.model("text", textSchema);
+
+// =======================export
+
 module.exports = {
     getUser: getUser,
     otpModel: otpModel,
+    text:text,
 }
