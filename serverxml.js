@@ -27,20 +27,10 @@ appxml.use(cors({
 appxml.use(morgan('dev'));
 
 
-
-var PORT = process.env.PORT || 3001
-
-appxml.use("/", express.static(path.resolve(path.join(__dirname, "public"))));
-var server = http.createServer(appxml);
-var io = socketIo(server);
-
-io.on("connection" , ()=>{
-    console.log("user connected" );
-})
-
 // appxml.use(cors());
 // appxml.use(bodyParser.urlencoded({ extended: true }));
 
+appxml.use("/", express.static(path.resolve(path.join(__dirname, "public"))));
 
 // =========================>
 
@@ -87,18 +77,18 @@ appxml.use(function (req, res, next) {
 appxml.get("/getProfile", (req, res, next) => {
     console.log("my tweets user=>", req.body);
     getUser.findById(req.body.jToken.id,
-    // getUser.findById({ email: req.body.jToken.email },
-         (err, doc) => {
-        if (!err) {
-            res.send({
-                profile: doc
-            })
-        } else {
-            res.status(500).send({
-                message: "server error"
-            })
-        }
-    })
+        // getUser.findById({ email: req.body.jToken.email },
+        (err, doc) => {
+            if (!err) {
+                res.send({
+                    profile: doc
+                })
+            } else {
+                res.status(500).send({
+                    message: "server error"
+                })
+            }
+        })
 });
 
 
@@ -120,7 +110,7 @@ appxml.post("/profilePOST", (req, res, next) => {
             `)
         return;
     };
-    getUser.findById(req.body.jToken.id, 
+    getUser.findById(req.body.jToken.id,
         (err, user) => {
             if (!err) {
                 console.log("tweet user : " + user);
@@ -134,9 +124,8 @@ appxml.post("/profilePOST", (req, res, next) => {
                             name: user.name,
                             email: user.email,
                         });
-
-                    io.emit("NEW_DATA", data);
-                
+                    // io.broadcast.emit("chat-connect",data)
+                    io.emit("chat-connect", data)
                 }).catch((err) => {
                     res.status(500).send({
                         message: "an error occured : " + err,
@@ -152,58 +141,65 @@ appxml.post("/profilePOST", (req, res, next) => {
 });
 
 
-appxml.get('/realtimechat',(req, res, next)=>{
-    tweet.find({},(err,data)=>{
-        if(!err)
-        {
-            console.log("tweetdata=====>",data);
+appxml.get('/realtimechat', (req, res, next) => {
+    tweet.find({}, (err, data) => {
+        if (!err) {
+            console.log("tweetdata=====>", data);
             res.send({
                 tweet: data,
             });
         }
-        else{
-            console.log("error : ",err);
+        else {
+            console.log("error : ", err);
             res.status(500).send("error");
         }
-      })
-    });
-
-
-    // appxml.get("/myTweets", (req, res, next) => {
-    //     console.log("my tweets user=>",req.body);
-    //     tweet.find({useremail : req.body.jToken.email},(err,data)=>{
-    //       if(!err)
-    //       {
-    //           console.log("tweet data=>",data);
-    //           res.status(200).send({
-    //               tweets : data,
-    //           });
-    //       }
-    //       else{
-    //           console.log("error : ",err);
-    //           res.status(500).send("error");
-    //       }
-    //     })
-    //   });
-    io.on('connection', user => {
-        
-        console.log("connection id",user.id);
-        // user.broadcast.emit("user-id",user)
-        
-        user.on('send-message',(message)=>{
-            console.log("message",message);
-            // user.broadcast.emit("chat-connect",message)
-        
-        
-        
-        
-        }) 
     })
+});
+
+
+// appxml.get("/myTweets", (req, res, next) => {
+//     console.log("my tweets user=>",req.body);
+//     tweet.find({useremail : req.body.jToken.email},(err,data)=>{
+//       if(!err)
+//       {
+//           console.log("tweet data=>",data);
+//           res.status(200).send({
+//               tweets : data,
+//           });
+//       }
+//       else{
+//           console.log("error : ",err);
+//           res.status(500).send("error");
+//       }
+//     })
+//   });
 
 
 
 
 
+var PORT = process.env.PORT || 3001
+
+var server = http.createServer(appxml);
+var io = socketIo(server, { cors: { origin: "*", methods: "*", } });
+
+io.on("connection", () => {
+    console.log("user connected");
+
+    io.emit("chat-connect", {name: "gtgfdg"})
+})
+
+
+
+
+// io.on('connection', user => {
+//     console.log("connection id", user.id);
+//     // user.broadcast.emit("user-id",user)
+//     user.on('send-message', (message) => {
+//         console.log("message", message);
+//         // user.broadcast.emit("chat-connect",message)
+//     })
+// })
 // ==========================================>Server /////
 
 server.listen(PORT, () => {

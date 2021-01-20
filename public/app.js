@@ -27,8 +27,18 @@ var socket = io("http://localhost:3001");
 
 socket.on('connect', function () {
     console.log("I am connected");
+
+
+
+    
 });
 
+socket.on("chat-connect", (user) => {
+    console.log(`${user}${"Raza"}`);
+    // console.log(newPOST.tweet);
+    // console.log(newPOST.email);
+    // console.log(newPOST.name);
+})
 
 const sub = () => {
     let namei = document.getElementById("name").value
@@ -184,26 +194,6 @@ function getProfile() {
                 realtimechat();
                 data = JSON.parse((Http.responseText));
                 console.log(data);
-            for (let i = 0; i < data.length; i++) {
-                date = moment((data[i].createdOn)).fromNow()
-         if (data[i].email !== email) {
-            var eachTweet = document.createElement("li");
-            eachTweet.innerHTML =
-                `<h4 class="userName">
-                ${data[i].name}
-            </h4> 
-            <small class="timeago">${date}</small>
-            <p class="userPost" datetime=${date}>
-                ${data[i].msg}
-            </p>`;
-
-            console.log(`User: ${data[i]} ${data[i].userPosts[j]}`)
-            // document.getElementById("posts").appendChild(eachTweet)
-            // }
-        }
-                // const element = array[i];
-                console.log(i);
-            }
             }
             else {
                 alert("Session expired");
@@ -249,76 +239,10 @@ function realtimechat() {
 
     }).then((response) => {
         console.log(response, "realtimechat");
-        // document.getElementById("posts").innerHTML=response
-        // for (let i = 0; i < data.tweet.length; i++) {
-            // date = moment((data.tweet[i].createdOn)).fromNow()
-            // if (data.tweet[i].email !== email) {
-            // var eachTweet = document.createElement("li");
-            // eachTweet.innerHTML =
-            //     `<h4 class="userName">
-            //                     ${data.tweets[i].name}
-            //                 </h4> 
-            //                 <small class="timeago">${date}</small>
-            //                 <p class="userPost" datetime=${date}>
-            //                     ${data.tweet[i].tweetText}
-            //                 </p>`;
-
-            // console.log("s",i)
-            // document.getElementById("posts").appendChild(eachTweet)
-            
-        // }
-        }).catch((error) => {
-            console.log(error.message, "no data");
-        })
+    }).catch((error) => {
+        console.log(error.message, "no data");
+    })
 
 
 }
 
-
-socket.on("NEW_DATA", (newPost) => {
-console.log(newPOST.msg);
-console.log(newPOST.tweet);
-console.log(newPOST.email);
-console.log(newPOST.name);
-    // var eachTweet = document.createElement("li");
-    // eachTweet.innerHTML =
-    //     `<h4 class="userName">
-    //     ${newPost.name}
-    // </h4> 
-    // <small class="timeago">${moment(newPost.createdOn).fromNow()}</small>
-    // <p class="userPost">
-    //     ${newPost.msg}
-    // </p>`;
-    // console.log(`User: ${tweets[i]} ${tweets[i].userPosts[j]}`)
-    // document.getElementById("posts").appendChild(eachTweet)
-})
-
-// const myTweets = () => {
-//     document.getElementById("posts").innerHTML = "";
-//     const Http = new XMLHttpRequest();
-//     Http.open("GET", "http://localhost:3001/myTweets");
-//     Http.send();
-//     Http.onreadystatechange = (e) => {
-//         if (Http.readyState === 4) {
-//             let jsonRes = JSON.parse(Http.responseText)
-//             // console.log(jsonRes);
-//             for (let i = 0; i < jsonRes.tweets.length; i++) {
-//                 // console.log(`this is ${i} tweet = ${jsonRes.tweets[i].createdOn}`);
-
-//                 var eachTweet = document.createElement("li");
-//                 eachTweet.innerHTML =
-//                     `<h4 class="userName">
-//                     ${jsonRes.tweets[i].userName}
-//                 </h4> 
-//                 <small class="timeago">${jsonRes.tweets[i].createdOn}</small>
-//                 <p class="userPost">
-//                     ${jsonRes.tweets[i].tweetText}
-//                 </p>`;
-
-//                 // console.log(`User: ${tweets[i]} ${tweets[i].userPosts[j]}`)
-//                 document.getElementById("posts").appendChild(eachTweet)
-
-//             }
-//         }
-//     }
-// }
