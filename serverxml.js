@@ -7,16 +7,16 @@ var morgan = require("morgan");
 var jwt = require('jsonwebtoken'); // https://github.com/auth0/node-jsonwebtoken
 //is JWT secure? https://stackoverflow.com/questions/27301557/if-you-can-decode-jwt-how-are-they-secure
 var path = require("path")
-var { getUser } = require("./dberor/models")
 var authRoutes = require("./routes/auth");
-// var { ServerSecretKey } = require("./core/index")
+var { ServerSecretKey } = require("./core/index")
+var socketIo = require("socket.io");
+var http = require("http");
+var { getUser, tweet } = require("./dberor/models")
 
-console.log("getUser: ", getUser);
 
 var ServerSecretKey = process.env.SECRET || "123";
 
 let appxml = express()
-
 
 appxml.use(bodyParser.json());
 appxml.use(cookieParser());
@@ -27,10 +27,21 @@ appxml.use(cors({
 appxml.use(morgan('dev'));
 
 
+
+var PORT = process.env.PORT || 3001
+
+appxml.use("/", express.static(path.resolve(path.join(__dirname, "public"))));
+var server = http.createServer(appxml);
+var io = socketIo(server);
+
+io.on("connection" , ()=>{
+    console.log("user connected" );
+})
+
 // appxml.use(cors());
 // appxml.use(bodyParser.urlencoded({ extended: true }));
-appxml.use("/", express.static(path.resolve(path.join(__dirname, "public"))));
-// var server = http.createServer(app);
+
+
 // =========================>
 
 appxml.use("/auth", authRoutes)
@@ -46,7 +57,7 @@ appxml.use(function (req, res, next) {
     jwt.verify(req.cookies.jToken, ServerSecretKey, function (err, decodedData) {
         if (!err) {
 
-            const issueDate = decodedData.iat * 1000;
+            const issueDate = decodedData.iat * 1000; // javascript ms 13 digits me js me, mger iat deta hai 16 digit ka
             const nowDate = new Date().getTime();
             const diff = nowDate - issueDate; // 86400,000
 
@@ -73,28 +84,129 @@ appxml.use(function (req, res, next) {
 
 
 // ==========================================>Start Get Profile /////
-appxml.get("/profile", (req, res, next) => {
+appxml.get("/getProfile", (req, res, next) => {
+    console.log("my tweets user=>", req.body);
+    getUser.findById(req.body.jToken.id,
+    // getUser.findById({ email: req.body.jToken.email },
+         (err, doc) => {
+        if (!err) {
+            res.send({
+                profile: doc
+            })
+        } else {
+            res.status(500).send({
+                message: "server error"
+            })
+        }
+    })
+});
+
+
+
+appxml.post("/profilePOST", (req, res, next) => {
 
     console.log(req.body.jToken.id)
+    console.log(req.body.tweet)
+    // if (!req.body.name || !req.body.email || !req.body.tweet) {
 
-    getUser.findById(req.body.jToken.id, 'name email phone gender createdOn',
-        function (err, doc) {
+    console.log("req body of tweet ", req.body);
+    if (!req.body.email || !req.body.tweet) {
+        res.status(409).send(`
+                Please send useremail and tweet in json body
+                e.g:
+                "name": "name",
+                "email": "abc@gmail.com",
+                "text": "abc"
+            `)
+        return;
+    };
+    getUser.findById(req.body.jToken.id, 
+        (err, user) => {
             if (!err) {
-                res.send({
-                    profile: doc
-                })
-            } else {
-                res.status(500).send({
-                    message: "server error"
+                console.log("tweet user : " + user);
+                tweet.create({
+                    email: req.body.email,
+                    msg: req.body.tweet,
+                }).then((data) => {
+                    console.log("Tweet created: " + data),
+                        res.status(200).send({
+                            // msg: "tweet",
+                            name: user.name,
+                            email: user.email,
+                        });
+
+                    io.emit("NEW_DATA", data);
+                
+                }).catch((err) => {
+                    res.status(500).send({
+                        message: "an error occured : " + err,
+                    });
+                });
+            }
+            else {
+                res.status.send({
+                    message: "an error occured" + err,
                 })
             }
         })
-})
+});
+
+
+appxml.get('/realtimechat',(req, res, next)=>{
+    tweet.find({},(err,data)=>{
+        if(!err)
+        {
+            console.log("tweetdata=====>",data);
+            res.send({
+                tweet: data,
+            });
+        }
+        else{
+            console.log("error : ",err);
+            res.status(500).send("error");
+        }
+      })
+    });
+
+
+    // appxml.get("/myTweets", (req, res, next) => {
+    //     console.log("my tweets user=>",req.body);
+    //     tweet.find({useremail : req.body.jToken.email},(err,data)=>{
+    //       if(!err)
+    //       {
+    //           console.log("tweet data=>",data);
+    //           res.status(200).send({
+    //               tweets : data,
+    //           });
+    //       }
+    //       else{
+    //           console.log("error : ",err);
+    //           res.status(500).send("error");
+    //       }
+    //     })
+    //   });
+    io.on('connection', user => {
+        
+        console.log("connection id",user.id);
+        // user.broadcast.emit("user-id",user)
+        
+        user.on('send-message',(message)=>{
+            console.log("message",message);
+            // user.broadcast.emit("chat-connect",message)
+        
+        
+        
+        
+        }) 
+    })
+
+
+
 
 
 // ==========================================>Server /////
-var PORT = process.env.PORT || 3001
-appxml.listen(PORT, () => {
+
+server.listen(PORT, () => {
     console.log("chal gya hai server", PORT)
 })
 // ==========================================>Server End/////
@@ -128,11 +240,11 @@ appxml.listen(PORT, () => {
 
 // const io = socketIO(server);
 
-// // io.on('connection', user=> {console.log("clint id",user.id);});
-// // io.on('disconnect', user=>{console.log("dissconect id",user.id);});
+// io.on('connection', user=> {console.log("clint id",user.id);});
+// io.on('disconnect', user=>{console.log("dissconect id",user.id);});
 
 // io.on('connection', user => {
-        
+
 // console.log("connection id",user.id);
 // // user.broadcast.emit("user-id",user)
 
@@ -148,6 +260,3 @@ appxml.listen(PORT, () => {
 // user.on('disconnect', () => { console.log("disconnect id",user.id);});
 // });
 
-// server.listen(PORT,()=>{
-// console.log("Server",PORT);
-// })

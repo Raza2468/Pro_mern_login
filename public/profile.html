@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat app</title>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!--Script.min.file -->
+  <script src="socket.io.js"></script>
+  <!-- <link rel="stylesheet" href="style.css"> -->
+  <script src="moment.js"></script>
+
+</head>
+
+<body onload="getProfile()">
+  <h1>tweet</h1>z
+  <br>
+  <input type="text" name="" id="usertext">
+  <button onclick="profilePOST()">Send</button>
+  <!-- <button onclick="getMessage()">Get PROFILE</button> -->
+  <ul id="posts">
+
+  </ul>
+  <button onclick="myTweets()">My profile</button>
+  <!-- <button onclick="realtimechat()">getmessage</button> -->
+  <div id="welcomeUser">
+
+  </div>
+
+  <script src="app.js"></script>
+</body>
+
+</html>

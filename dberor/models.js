@@ -56,18 +56,20 @@ var otpModel = mongoose.model("otps", otpSchema);
 
 // =======================export
 
-var textSchema = new mongoose.Schema({
-    "email": String,
-    "text": String,
-    "createdOn": { "type": Date, "default": Date.now },
+var tweetSchema = new mongoose.Schema({
+    // name: String,
+    email: String,
+    msg: String,
+    createdOn: { type: Date, 'default': Date.now },
+    // activeSince: Date,
     
 });
-var text = mongoose.model("text", textSchema);
+var tweet = mongoose.model("tweet", tweetSchema);
 
 // =======================export
 
 module.exports = {
     getUser: getUser,
     otpModel: otpModel,
-    text:text,
+    tweet:tweet,
 }
