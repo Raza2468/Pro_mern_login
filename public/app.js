@@ -42,12 +42,15 @@ socket.on("chat-connect", (data) => {
         // console.log(loop[i].msg);
         // console.log(loop[i].createdOn);
         // console.log(`" email " ${soketloop[i].email}" message "${soketloop[i].msg}" time "${soketloop[i].createdOn}`);
-        // var post = document.getElementById('welcomeUser')
-        // var litext = document.createElement('li')
-        // var litex=document.createTextNode(`" message "${soketloop[i].name} `);
-        // litext.appendChild(litex)
-        // post.appendChild(litext)
+        var post = document.getElementById('welcomeUser')
+        var litext = document.createElement('li')
+        var litex=document.createTextNode(`" name=> "${data.name}" massage=> "${data.msg} " time=> "${data.createdOn}`);
+        litext.appendChild(litex)
+        litext.setAttribute("class", "realclass");
+            
+        post.appendChild(litext)
         // console.log(`${data.name}${"====Raza"}`);
+       
         console.log(data.email,"email");
         console.log(data.createdOn,"time");
         console.log(data.msg,"message");
@@ -220,8 +223,8 @@ function getProfile() {
                 console.log(createdOn);
                 realtimechat();
                 data = JSON.parse((Http.responseText));
-                console.log(data);
-
+                console.log(data,"Dasdsad");
+                document.getElementById("username").innerHTML=data.profile.name
             }
             else {
                 alert("Session expired");
@@ -276,9 +279,10 @@ function realtimechat() {
             // console.log(`" email " ${loop[i].email}" message "${loop[i].msg}" time "${loop[i].createdOn}`);
             var post = document.getElementById('welcomeUser')
             var litext = document.createElement('li')
-            var litex=document.createTextNode(`" message "${loop[i].msg} " email " ${loop[i].email}" time "${loop[i].createdOn}`);
-            litext.appendChild(litex)
-            post.appendChild(litext)
+            litext.setAttribute("class", "democlass");
+            var litex=document.createTextNode(`" name=> "${loop[i].name} " message=> " ${loop[i].msg}" time=> "${loop[i].createdOn}`);
+            litext.appendChild(litex);
+            post.appendChild(litext);
         }
         // console.log(response.data.tweet, "realtimechat");
 

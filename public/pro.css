@@ -1,0 +1,12 @@
+*{
+    background-color: antiquewhite;
+}
+.democlass{
+    background-color: yellow;
+    height: 50px;
+  }
+  .realclass{
+    background-color: yellowgreen;
+    height: 50px;
+text-align: right;  
+}
