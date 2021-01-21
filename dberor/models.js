@@ -60,6 +60,7 @@ var tweetSchema = new mongoose.Schema({
     // name: String,
     email: String,
     msg: String,
+    name:String,
     createdOn: { type: Date, 'default': Date.now },
     // activeSince: Date,
     

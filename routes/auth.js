@@ -151,7 +151,7 @@ appxml.post('/forget-password', (req, res, next) => {
         please send email in json body.
         e.g:
         {
-            "email": "faizeraza2468@gmail.com"
+            "email": "Razamalik468@gmail.com"
         }`)
         return;
     }

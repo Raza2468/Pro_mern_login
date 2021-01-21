@@ -100,7 +100,7 @@ appxml.post("/profilePOST", (req, res, next) => {
     // if (!req.body.name || !req.body.email || !req.body.tweet) {
 
     console.log("req body of tweet ", req.body);
-    if (!req.body.email || !req.body.tweet) {
+    if (!req.body.tweet) {
         res.status(409).send(`
                 Please send useremail and tweet in json body
                 e.g:
@@ -111,20 +111,22 @@ appxml.post("/profilePOST", (req, res, next) => {
         return;
     };
     getUser.findById(req.body.jToken.id,
+        console.log(req.body),
         (err, user) => {
             if (!err) {
                 console.log("tweet user : " + user);
                 tweet.create({
-                    email: req.body.email,
+                    name: user.name,
+                    email: user.email,
                     msg: req.body.tweet,
                 }).then((data) => {
                     console.log("Tweet created: " + data),
                         res.status(200).send({
-                            // msg: "tweet",
-                            name: user.name,
-                            email: user.email,
+                            msg: req.body.tweet,
+                            name: data.name,
+                            email: data.email,
                         });
-                    // io.broadcast.emit("chat-connect",data)
+                    // io.emit("chat-connect",data)
                     io.emit("chat-connect", data)
                 }).catch((err) => {
                     res.status(500).send({
@@ -182,12 +184,6 @@ var PORT = process.env.PORT || 3001
 
 var server = http.createServer(appxml);
 var io = socketIo(server, { cors: { origin: "*", methods: "*", } });
-
-io.on("connection", () => {
-    console.log("user connected");
-
-    io.emit("chat-connect", {name: "gtgfdg"})
-})
 
 
 

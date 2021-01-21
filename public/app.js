@@ -30,11 +30,38 @@ socket.on('connect', function () {
 
 
 
-    
+
 });
 
-socket.on("chat-connect", (user) => {
-    console.log(`${user}${"Raza"}`);
+socket.on("chat-connect", (data) => {
+ 
+    // var soketloop =data.profile    // var loop = response.data.tweet
+    // for (var i = 0; i <data.profile.length; i++) {
+        // alert(response.data[i]);
+        // console.log(data[i]);
+        // console.log(loop[i].msg);
+        // console.log(loop[i].createdOn);
+        // console.log(`" email " ${soketloop[i].email}" message "${soketloop[i].msg}" time "${soketloop[i].createdOn}`);
+        // var post = document.getElementById('welcomeUser')
+        // var litext = document.createElement('li')
+        // var litex=document.createTextNode(`" message "${soketloop[i].name} `);
+        // litext.appendChild(litex)
+        // post.appendChild(litext)
+        // console.log(`${data.name}${"====Raza"}`);
+        console.log(data.email,"email");
+        console.log(data.createdOn,"time");
+        console.log(data.msg,"message");
+        console.log(data.name,"name");
+        console.log(data,"data");
+    // }
+    // console.log(response.data.tweet, "realtimechat");
+
+    // var post = document.getElementById('posts')
+    // var litext = document.createElement('li')
+    // var litex = document.createTextNode(data);
+    // litext.appendChild(litex)
+    // post.appendChild(litext)
+
     // console.log(newPOST.tweet);
     // console.log(newPOST.email);
     // console.log(newPOST.name);
@@ -194,6 +221,7 @@ function getProfile() {
                 realtimechat();
                 data = JSON.parse((Http.responseText));
                 console.log(data);
+
             }
             else {
                 alert("Session expired");
@@ -219,10 +247,10 @@ function profilePOST() {
         url: "http://localhost:3001/profilePOST",
         data: {
             tweet: tweet,
-            email: "faizeraza2468@gmail.com",
+            // email: "faizeraza2468@gmail.com",
         }
     }).then((response) => {
-        // realtimechat()
+        // getProfile()
     }).catch((error) => {
         console.log(error.message);
     })
@@ -238,7 +266,22 @@ function realtimechat() {
         url: "http://localhost:3001/realtimechat",
 
     }).then((response) => {
-        console.log(response, "realtimechat");
+        var loop = response.data.tweet
+        // console.log(data,"dadada");
+        for (var i = 0; i < loop.length; i++) {
+            // alert(response.data[i]);
+            // console.log(loop[i].email);
+            // console.log(loop[i].msg);
+            // console.log(loop[i].createdOn);
+            // console.log(`" email " ${loop[i].email}" message "${loop[i].msg}" time "${loop[i].createdOn}`);
+            var post = document.getElementById('welcomeUser')
+            var litext = document.createElement('li')
+            var litex=document.createTextNode(`" message "${loop[i].msg} " email " ${loop[i].email}" time "${loop[i].createdOn}`);
+            litext.appendChild(litex)
+            post.appendChild(litext)
+        }
+        // console.log(response.data.tweet, "realtimechat");
+
     }).catch((error) => {
         console.log(error.message, "no data");
     })
