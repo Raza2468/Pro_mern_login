@@ -1,12 +1,17 @@
-*{
+/* *{
     background-color: antiquewhite;
-}
+} */
 .democlass{
     background-color: yellow;
     height: 50px;
+    text-align: right;  
   }
   .realclass{
     background-color: yellowgreen;
     height: 50px;
-text-align: right;  
+    text-align: left; 
+}
+#myfile{
+  height: 100px;
+  width: 50%;
 }

@@ -6,18 +6,29 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat app</title>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <!--Script.min.file -->
   <script src="socket.io.js"></script>
   <link rel="stylesheet" href="pro.css">
   <script src="moment.js"></script>
-
 </head>
 
 <body onload="getProfile()">
- 
-  <h1>wellcom tweet<h2 id="username"></h2></h1>z
+
+  <!-- <div id="myfile">.mn.nm.</div><br><br>
+  <button onclick="filesumit()">file summit</button> -->
+  <form onsubmit="return upload()">
+    <input required type="file" id="fileInput">
+    <button type="submit"> Upload </button>
+  </form>
+
+
+  <!-- <img src="" alt="" srcset=""> -->
+
+  <h1>wellcom tweet<h2 id="username"></h2>
+  </h1>z
   <br>
   <input type="text" name="" id="usertext">
   <button onclick="profilePOST()">Send</button>
