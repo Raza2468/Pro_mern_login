@@ -239,18 +239,41 @@ appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.
                         if (!err) {
                             console.log("profileUrl:", urlData[0])
                             if (!err) {
-                                tweet.find({}, (err, data) => {
-                                    if (!err) {
-                                        console.log("tweetdata=====>", data);
-                                        // res.send({
-                                        //     tweet: data,
-                                        // });
-                                    }
-                                    else {
-                                        console.log("error : ", err);
-                                        res.status(500).send("error");
-                                    }
-                                })
+                                tweet.find({},
+                                    (err, data) => {
+                                        if (!err) {
+                                            // data.
+                                            // { profileUrl: urlData[0] },
+                                            console.log("tweetdata=====>", data);
+                                            // res.send({
+                                            //     tweet: data,
+                                            // });
+                                            // getUser.find(req.body.email,
+                                            //     console.log(req.body),
+                                            //     (err, user) => {
+                                            //         if (!err) {
+                                            //             // console.log("tweet user : " + user);
+                                            //             tweet.create({
+                                            //                 profileUrl: urlData[0]
+                                            //             })
+                                            //         }
+                                            //     })
+                                            console.log("user is ===>", user);
+                                            tweet.create({ profileUrl: urlData[0] }, (err, updatedUrl) => {
+                                                if (!err) {
+                                                    res.status(200).send({
+                                                        url: urlData[0],
+                                                    })
+                                                    console.log("succesfully uploaded");
+                                                }
+                                            }
+                                            )
+                                        }
+                                        else {
+                                            console.log("error : ", err);
+                                            res.status(500).send("error");
+                                        }
+                                    })
 
                                 // console.log("tweet user===email===> : " + user);
                             }
