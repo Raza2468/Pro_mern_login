@@ -48,7 +48,7 @@ admin.initializeApp({
     databaseURL: "https://delete-this-1329.firebaseio.com"
 });
 // const bucket = admin.storage().bucket("gs://delete-this-1329.appspot.com");
-// const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
+const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
 // mongodb+srv://faiz:2468@mundodb.lkd4g.mongodb.net/ttest?retryWrites=true&w=majority
 
 
