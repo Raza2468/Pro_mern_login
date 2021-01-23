@@ -253,10 +253,11 @@ function profilePOST() {
             // email: "faizeraza2468@gmail.com",
         }
     }).then((response) => {
-        // getProfile()
+        // upload()
     }).catch((error) => {
         console.log(error.message);
     })
+    upload()
     // return false;
 }
 

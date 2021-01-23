@@ -11,7 +11,7 @@ var authRoutes = require("./routes/auth");
 var { ServerSecretKey } = require("./core/index")
 var socketIo = require("socket.io");
 var http = require("http");
-var { getUser, tweet } = require("./dberor/models")
+var { getUser, tweet,profilepic } = require("./dberor/models")
 // var serviceaccount = require("./firebase/firebase.json")
 
 var ServerSecretKey = process.env.SECRET || "123";
@@ -48,7 +48,7 @@ admin.initializeApp({
     databaseURL: "https://delete-this-1329.firebaseio.com"
 });
 // const bucket = admin.storage().bucket("gs://delete-this-1329.appspot.com");
-const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
+// const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
 // mongodb+srv://faiz:2468@mundodb.lkd4g.mongodb.net/ttest?retryWrites=true&w=majority
 
 
@@ -195,15 +195,14 @@ var io = socketIo(server, { cors: { origin: "*", methods: "*", } });
 
 appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.single. see https://github.com/expressjs/multer/issues/799#issuecomment-586526877
 
-    console.log("req.body: ", req.body)
+    console.log("req.body: ", req.body);
+    console.log("req.body: ", JSON.parse(req.body.myDetails));
+    console.log("req.files: ", req.files);
 
-    // console.log("req.body: ", JSON.parse(req.body.myDetails));
-    // console.log("req.files: ", req.files);
-
-    // console.log("uploaded file name: ", req.files[0].originalname);
-    // console.log("file type: ", req.files[0].mimetype);
-    // console.log("file name in server folders: ", req.files[0].filename);
-    // console.log("file path in server folders: ", req.files[0].path);
+    console.log("uploaded file name: ", req.files[0].originalname);
+    console.log("file type: ", req.files[0].mimetype);
+    console.log("file name in server folders: ", req.files[0].filename);
+    console.log("file path in server folders: ", req.files[0].path);
 
     // upload file to storage bucket 
     // you must need to upload file in a storage bucket or somewhere safe
@@ -222,95 +221,129 @@ appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.
         // },
         function (err, file, apiResponse) {
             if (!err) {
-                console.log("api resp: ", apiResponse);
+                // console.log("api resp: ", apiResponse);
 
                 // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
                 file.getSignedUrl({
                     action: 'read',
                     expires: '03-09-2491'
+                }).then((urlData, err) => {
+                    if (!err) {
+                        console.log("public downloadable url: ", urlData[0]), // this is public downloadable url 
+                            res.send("Ok");
+                        getUser.findOne({}, apiResponse,
+                            // getUser.findOne({},
+                            console.log(req.body),
+                            (err, user) => {
+                                console.log(err, "errrrrr");
+                                console.log(user, "userrrrrrr");
+                                if (user) {
+
+                                    // tweet.update({ '_id': req.body.id},
+                                    //     { $set: { 'profileUrl': urlData[0],} }, function (err, result) {
+                                    //     if (err,result) {
+                                    //         console.log(err,"err");
+                                    //         console.log(result,"result");
+                                    //     }
+                                    //     })
+                                    profilepic.create({
+                                            profileUrl: urlData[0]
+                                        })
+                                } else {
+                                    console.log("urlData");
+                                }
+                                // if (!err) {
+                                //     console.log("tweet user : " + user);
+                                //     tweet.create({
+                                //         name: user.name,
+                                //         email: user.email,
+                                //         msg: req.body.tweet,
+                                //     }).then((data) => {
+                                //         console.log("Tweet created: " + data),
+                                //             res.status(200).send({
+                                //                 msg: req.body.tweet,
+                                //                 name: data.name,
+                                //                 email: data.email,
+                                //             });
+                                //         // io.emit("chat-connect",data)
+                                //         io.emit("chat-connect", data)
+                                //     }).catch((err) => {
+                                //         res.status(500).send({
+                                //             message: "an error occured : " + err,
+                                //         });
+                                //     });
+                                // }
+                                // else {
+                                //     res.status.send({
+                                //         message: "an error occured" + err,
+                                //     })
+                                // }
+                            })
+                        //     function (err, user) {
+                        //         if (err) {
+                        //             // getUser.findById({}, id,
+                        //             console.log("adadadad",err);
+                        //             //     )
+
+                        //             // res.status(500).send({
+                        //                 //     message: "an error occured: " + JSON.stringify(err)
+                        //                 // });
+                        //             } else if (user) {
+                        //                 // const otp = Math.floor(getRandomArbitrary(11111, 99999))
+                        //                 console.log("aAAA",user);
+
+                        //             // tweet.create({
+                        //             //     // email: req.body.email,
+                        //             //     profileUrl: urlData[0],
+                        //             // })
+                        //             // .then((err) => {
+                        //             //     console.log("error in creating otp: ", err);
+                        //             //     // res.status(500).send("unexpected error ")
+                        //             // })
+
+                        //     } else {
+                        //         res.status(403).send({
+                        //             message: "user not found"
+                        //         });
+                        //     }
+
+                        // }
+                    }
                 })
-
-                    // console.log("public downloadable url: ", urlData[0]) // this is public downloadable url 
-                    // console.log("my email is => ", userEmail);
-                    // getUser.findById(req.body.jToken.id,
-                    // getUser.find({req.body.email }, {},
-                    // (err, user) => {
-                    .then((urlData, err) => {
-                        if (!err) {
-                            console.log("profileUrl:", urlData[0])
-                            if (!err) {
-                                tweet.find({},
-                                    (err, data) => {
-                                        if (!err) {
-                                            // data.
-                                            // { profileUrl: urlData[0] },
-                                            console.log("tweetdata=====>", data);
-                                            // res.send({
-                                            //     tweet: data,
-                                            // });
-                                            // getUser.find(req.body.email,
-                                            //     console.log(req.body),
-                                            //     (err, user) => {
-                                            //         if (!err) {
-                                            //             // console.log("tweet user : " + user);
-                                            //             tweet.create({
-                                            //                 profileUrl: urlData[0]
-                                            //             })
-                                            //         }
-                                            //     })
-                                            console.log("user is ===>", user);
-                                            tweet.create({ profileUrl: urlData[0] }, (err, updatedUrl) => {
-                                                if (!err) {
-                                                    res.status(200).send({
-                                                        url: urlData[0],
-                                                    })
-                                                    console.log("succesfully uploaded");
-                                                }
-                                            }
-                                            )
-                                        }
-                                        else {
-                                            console.log("error : ", err);
-                                            res.status(500).send("error");
-                                        }
-                                    })
-
-                                // console.log("tweet user===email===> : " + user);
-                            }
-
-                            // tweet.updateMany({ email: email }, { profileUrl: urlData[0] }, 
-                            //     (err, tweet) => {
-                            //     if (!err) {
-                            console.log("profile picture updated succesfully");
-                            //     }
-                            //     // console.log("tweet user===email===> : " + user);
-                            // }
-                            // )
-
-                        }
-                    })
-                // .then((urlData, err) => {
-                //     if (!err) {
-                //         console.log("public downloadable url: ", urlData[0]) // this is public downloadable url 
-                //         console.log("email========eeeeeeee====>", email);
-                //         // // delete file from folder before sending response back to client (optional but recommended)
-                //         // // optional because it is gonna delete automatically sooner or later
-                //         // // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder
-                //         // try {
-                //         //     fs.unlinkSync(req.files[0].path)
-                //         //     //file removed
-                //         // } catch (err) {
-                //         //     console.error(err)
-                //         // }
-                //         res.send("Ok");
-                //     }
-                // })
             } else {
                 console.log("err: ", err)
                 res.status(500).send();
             }
         });
 })
+// .then((doc) => {
+// client.sendEmail({
+//     "From": "faiz_student@sysborg.com",
+
+//     "To": req.body.email,
+//     "Subject": "Reset your password",
+//     "TextBody": `Here is your pasword reset code: ${otp}`
+// })
+// })
+// .then((status) => {
+//     console.log("status: ", status);
+//     res.send
+//         ({
+//       console.log();
+//             // message: "email sent with otp",
+//         })
+// })
+
+// // delete file from folder before sending response back to client (optional but recommended)
+// // optional because it is gonna delete automatically sooner or later
+// // recommended because you may run out of space if you dont do so, and if your files are sensitive it is simply not safe in server folder
+// try {
+//     fs.unlinkSync(req.files[0].path)
+//     //file removed
+// } catch (err) {
+//     console.error(err)
+// }
+
 
 
 // ==========================================>Server /////

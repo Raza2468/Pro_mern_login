@@ -68,10 +68,21 @@ var tweetSchema = new mongoose.Schema({
 });
 var tweet = mongoose.model("tweet", tweetSchema);
 
+var picSchema = new mongoose.Schema({
+    // name: String,
+    email: String,
+    profileUrl:String,
+    createdOn: { type: Date, 'default': Date.now },
+    // activeSince: Date,
+    
+});
+var profilepic = mongoose.model("pic", picSchema);
+
 // =======================export
 
 module.exports = {
     getUser: getUser,
     otpModel: otpModel,
     tweet:tweet,
+    profilepic:profilepic,
 }
