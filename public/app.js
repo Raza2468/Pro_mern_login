@@ -225,6 +225,7 @@ function getProfile() {
                 data = JSON.parse((Http.responseText));
                 console.log(data,"Dasdsad");
                 document.getElementById("username").innerHTML=data.profile.name
+                document.getElementById("myProfile").src = data.profile.profileUrl;
             }
             else {
                 alert("Session expired");
@@ -338,7 +339,8 @@ function upload() {
         headers: { 'Content-Type': 'multipart/form-data' }
     })
         .then(res => {
-            console.log(`upload Success` + res.data);
+
+            console.log(`upload Success` + JSON.stringify(res.data));
         })
         .catch(err => {
             console.log(err);

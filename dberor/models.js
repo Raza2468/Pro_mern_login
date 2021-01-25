@@ -42,6 +42,7 @@ var userSchema = new mongoose.Schema({
     gender: String,
     createdOn: { type: Date, 'default': Date.now },
     activeSince: Date,
+    profileUrl : String,
 });
 var getUser = mongoose.model("users", userSchema);
 
@@ -62,6 +63,7 @@ var tweetSchema = new mongoose.Schema({
     msg: String,
     name:String,
     profileUrl:String,
+    tweetImage : String,
     createdOn: { type: Date, 'default': Date.now },
     // activeSince: Date,
     

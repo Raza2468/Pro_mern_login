@@ -2,16 +2,29 @@
     background-color: antiquewhite;
 } */
 .democlass{
-    background-color: yellow;
-    height: 50px;
-    text-align: right;  
-  }
-  .realclass{
-    background-color: yellowgreen;
-    height: 50px;
-    text-align: left; 
+  
+  height: 50px;
+   text-align: right;
+   /* list-style: none; */
+   padding: 10px;
+   font-size: 18px;
+   padding: 10px;
+   transform: rotate(
+-180deg
+);
+   text-align: justify;
+   /* border-bottom: 1px solid rgb(255 85 255 / 33%); */
+   margin-bottom: 15px;
+   box-shadow: 1px 0px 3px 0 rgb(0 0 0 / 20%);
+   border: 2px solid rgb(245 245 245 / 96%);
+   border-radius: 16px;
+ }
+ .realclass{
+   background-color: yellowgreen;
+   height: 50px;
+   text-align: left; 
 }
 #myfile{
-  height: 100px;
-  width: 50%;
+ height: 100px;
+ width: 50%;
 }

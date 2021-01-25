@@ -13,10 +13,31 @@
   <script src="socket.io.js"></script>
   <link rel="stylesheet" href="pro.css">
   <script src="moment.js"></script>
+  <style>
+      #myProfile{
+    vertical-align: middle;
+    /* width: 170px; */
+    border-radius: 50%;
+    display: block;
+    margin: 8px auto;
+    max-width: 100%;
+    height: auto;
+    max-width: 170px;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+  #welcomeUser{
+    transform: rotate( 
+180deg
+ );
+  }
+  </style>
 </head>
 
 <body onload="getProfile()">
-
+<img id="myProfile">
   <!-- <div id="myfile">.mn.nm.</div><br><br>
   <button onclick="filesumit()">file summit</button> -->
   <!-- <form action="#" onsubmit="return postTweet()">

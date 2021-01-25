@@ -11,7 +11,7 @@ var authRoutes = require("./routes/auth");
 var { ServerSecretKey } = require("./core/index")
 var socketIo = require("socket.io");
 var http = require("http");
-var { getUser, tweet,profilepic } = require("./dberor/models")
+var { getUser, tweet, profilepic } = require("./dberor/models")
 // var serviceaccount = require("./firebase/firebase.json")
 
 var ServerSecretKey = process.env.SECRET || "123";
@@ -90,6 +90,7 @@ appxml.use(function (req, res, next) {
                     httpOnly: true
                 });
                 req.body.jToken = decodedData
+                req.headers.jToken = decodedData;
                 next();
             }
         } else {
@@ -229,85 +230,21 @@ appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.
                     expires: '03-09-2491'
                 }).then((urlData, err) => {
                     if (!err) {
-                        console.log("public downloadable url: ", urlData[0]), // this is public downloadable url 
-                            res.send("Ok");
-                        getUser.findOne({}, apiResponse,
-                            // getUser.findOne({},
-                            console.log(req.body),
-                            (err, user) => {
-                                console.log(err, "errrrrr");
-                                console.log(user, "userrrrrrr");
-                                if (user) {
 
-                                    // tweet.update({ '_id': req.body.id},
-                                    //     { $set: { 'profileUrl': urlData[0],} }, function (err, result) {
-                                    //     if (err,result) {
-                                    //         console.log(err,"err");
-                                    //         console.log(result,"result");
-                                    //     }
-                                    //     })
-                                    profilepic.create({
-                                            profileUrl: urlData[0]
-                                        })
-                                } else {
-                                    console.log("urlData");
+                        getUser.findById(req.headers.jToken.id, (err, userData) => {
+                            userData.update({ profileUrl: urlData[0] }, (err, updated) => {
+                                if (!err) {
+                                    res.status(200).send({
+                                        profileUrl: urlData[0],
+                                    })
                                 }
-                                // if (!err) {
-                                //     console.log("tweet user : " + user);
-                                //     tweet.create({
-                                //         name: user.name,
-                                //         email: user.email,
-                                //         msg: req.body.tweet,
-                                //     }).then((data) => {
-                                //         console.log("Tweet created: " + data),
-                                //             res.status(200).send({
-                                //                 msg: req.body.tweet,
-                                //                 name: data.name,
-                                //                 email: data.email,
-                                //             });
-                                //         // io.emit("chat-connect",data)
-                                //         io.emit("chat-connect", data)
-                                //     }).catch((err) => {
-                                //         res.status(500).send({
-                                //             message: "an error occured : " + err,
-                                //         });
-                                //     });
-                                // }
-                                // else {
-                                //     res.status.send({
-                                //         message: "an error occured" + err,
-                                //     })
-                                // }
                             })
-                        //     function (err, user) {
-                        //         if (err) {
-                        //             // getUser.findById({}, id,
-                        //             console.log("adadadad",err);
-                        //             //     )
 
-                        //             // res.status(500).send({
-                        //                 //     message: "an error occured: " + JSON.stringify(err)
-                        //                 // });
-                        //             } else if (user) {
-                        //                 // const otp = Math.floor(getRandomArbitrary(11111, 99999))
-                        //                 console.log("aAAA",user);
 
-                        //             // tweet.create({
-                        //             //     // email: req.body.email,
-                        //             //     profileUrl: urlData[0],
-                        //             // })
-                        //             // .then((err) => {
-                        //             //     console.log("error in creating otp: ", err);
-                        //             //     // res.status(500).send("unexpected error ")
-                        //             // })
 
-                        //     } else {
-                        //         res.status(403).send({
-                        //             message: "user not found"
-                        //         });
-                        //     }
+                        })
 
-                        // }
+
                     }
                 })
             } else {
