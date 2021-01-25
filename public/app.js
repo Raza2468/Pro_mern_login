@@ -276,8 +276,12 @@ function profilePOST() {
         formData.append("myFile", fileInput.files[0]);
         axios({
             method: 'post',
-            url:"http://localhost:3001/profilePOSTimage",
-            data: formData,
+            url: "http://localhost:3001/profilePOSTimage",
+            data: {
+                formData: formData,
+                tweet: tweet,
+            }
+            ,
             headers: { 'Content-Type': 'multipart/form-data' }
         })
             .then((res) => {

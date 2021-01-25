@@ -158,27 +158,15 @@ appxml.post("/profilePOST", upload.any(), (req, res, next) => {
                     email: user.email,
                     msg: req.body.tweet,
                 }).then((data) => {
-                    console.log("Tweet created: " + data),
+                    console.log("Tweet creaxcvxcvxvted;': " + data),
 
-                        //     datatoSend = data;
-                        // console.log("user profile url is => ", user.profileUrl);
-                        // datatoSend.profileUrl = user.profileUrl;
-                        // console.log("Tweet created: " + datatoSend),
                         res.status(200).send({
                             msg: req.body.tweet,
                             name: data.name,
                             email: data.email,
                             // profileUrl: user.profileUrl,
                         });
-                    // io.emit("chat-connect", {
-                    //     data:data,
-                    // profileUrl: user.profileUrl,
-                    // });
-                    // res.status(200).send({
-                    //     msg: req.body.tweet,
-                    //     name: data.name,
-                    //     email: data.email,
-                    // });
+                
                     io.emit("chat-connect", data)
                     // io.emit("chat-connect", data)
                 }).catch((err) => {
@@ -252,6 +240,10 @@ appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.
 })
 
 appxml.post('/profilePOSTimage', upload.any(), (req, res, next) => {
+    
+   
+
+    
     bucket.upload(
         req.files[0].path,
         // {
@@ -267,17 +259,17 @@ appxml.post('/profilePOSTimage', upload.any(), (req, res, next) => {
                     expires: '03-09-2491'
                 }).then((urlData, err) => {
                     if (!err) {
-                        getUser.findById(req.headers.jToken.id, 'userName userEmail profileUrl',
-                            (err, user) => {
+                        getUser.findById(req.headers.jToken.id,
+                            (err, data) => {
                                 if (!err) {
                                     // console.log("tweet user : " + user);
                                     tweet.create({
-                                        name: user.name,
-                                        email: user.email,
+                                        name: data.name,
+                                        email: data.email,
                                         msg: req.body.tweet,
                                         profileUrl: urlData[0]
                                     }).then((data) => {
-                                        // console.log("Tweet created: " + data),
+                                        console.log("Tweet created: " + data),
                                         // console.log("profile url is = > " , user.profileUrl);
                                         // console.log("imgae url is == > ", urlData[0]);
 
@@ -285,12 +277,12 @@ appxml.post('/profilePOSTimage', upload.any(), (req, res, next) => {
                                             msg: req.body.tweet,
                                             name: data.name,
                                             email: data.email,
-                                            profileUrl: user.profileUrl,
+                                            profileUrl: req.body.urlData[0],
                                         });
 
                                         io.emit("chat-connect", {
                                             data: data,
-                                            profileUrl: user.profileUrl,
+                                            profileUrl: req.body.urlData[0],
                                         })
                                     }).catch((err) => {
                                         res.status(500).send({
