@@ -34,28 +34,29 @@ socket.on('connect', function () {
 });
 
 socket.on("chat-connect", (data) => {
- 
+
     // var soketloop =data.profile    // var loop = response.data.tweet
     // for (var i = 0; i <data.profile.length; i++) {
-        // alert(response.data[i]);
-        // console.log(data[i]);
-        // console.log(loop[i].msg);
-        // console.log(loop[i].createdOn);
-        // console.log(`" email " ${soketloop[i].email}" message "${soketloop[i].msg}" time "${soketloop[i].createdOn}`);
-        var post = document.getElementById('welcomeUser')
-        var litext = document.createElement('li')
-        var litex=document.createTextNode(`" name=> "${data.name}" massage=> "${data.msg} " time=> "${moment(data.createdOn).fromNow()}`);
-        litext.appendChild(litex)
-        litext.setAttribute("class", "realclass");
-            
-        post.appendChild(litext)
-        // console.log(`${data.name}${"====Raza"}`);
-       
-        console.log(data.email,"email");
-        console.log(data.createdOn,"time");
-        console.log(data.msg,"message");
-        console.log(data.name,"name");
-        console.log(data,"data");
+    // alert(response.data[i]);
+    // console.log(data[i]);
+    // console.log(loop[i].msg);
+    // console.log(loop[i].createdOn);
+    // console.log(`" email " ${soketloop[i].email}" message "${soketloop[i].msg}" time "${soketloop[i].createdOn}`);
+    var post = document.getElementById('welcomeUser')
+    var litext = document.createElement('li')
+    // var litex = document.createTextNode(`${data.name}${data.msg}${moment(data.createdOn).fromNow()}`);
+    var litex = document.createTextNode(`${data.name}"====>"${data.msg}"====>"${moment(data.createdOn).fromNow()}`);
+    litext.appendChild(litex)
+    litext.setAttribute("class", "realclass");
+
+    post.appendChild(litext)
+    // console.log(`${data.name}${"====Raza"}`);
+
+    console.log(data.email, "email");
+    console.log(data.createdOn, "time");
+    console.log(data.msg, "message");
+    console.log(data.name, "name");
+    console.log(data, "data");
     // }
     // console.log(response.data.tweet, "realtimechat");
 
@@ -216,18 +217,30 @@ function getProfile() {
     Http.onreadystatechange = (e) => {
         if (Http.readyState === 4) {
             if (Http.status === 200) {
+                // console.log("date==> " + date);
+                // console.log("response==> " + Http.responseText);
+                // createdOn = moment(Http.responseText.createdOn).fromNow();
+                // console.log(createdOn);
+                // console.log(data, "Dasdsad");
+                // document.getElementById("myProfile").src = data.profile.profileUrl;
+                // if (Http.status === 200) {
                 var date = moment(new Date("03/25/2015")).fromNow();
-                console.log("date==> " + date);
-                console.log("response==> " + Http.responseText);
-                createdOn = moment(Http.responseText.createdOn).fromNow();
-                console.log(createdOn);
-                realtimechat();
                 data = JSON.parse((Http.responseText));
-                console.log(data,"Dasdsad");
-                document.getElementById("username").innerHTML=data.profile.name
+                // document.getElementById("fileInput").style.display = "none";
+                document.getElementById("profilePic").src = data.profile.profileUrl;
                 document.getElementById("myProfile").src = data.profile.profileUrl;
+                document.getElementById("username").innerHTML = data.profile.name
+                // document.getElementById("tweetText").placeholder = `What's on your mind, ${response.data.profile.name}?`;
+                realtimechat();
+
+                // }
+                // else {
+                // }
             }
             else {
+                // document.getElementById("uploadTxt").innerHTML = "Upload profile picture";
+                // document.getElementById("fileInput").setAttribute("id", "fileInput");
+                // document.getElementById("avatar").src = "./image/image.png";
                 alert("Session expired");
                 window.location.href = "index.html";
             }
@@ -245,20 +258,39 @@ function getProfile() {
 
 // user=>app=>serverv
 function profilePOST() {
-    var tweet = document.getElementById("usertext").value;
-    axios({
-        method: "POST",
-        url: "http://localhost:3001/profilePOST",
-        data: {
-            tweet: tweet,
-            // email: "faizeraza2468@gmail.com",
-        }
-    }).then((response) => {
-        // upload()
-    }).catch((error) => {
-        console.log(error.message);
-    })
-    upload()
+    // tweetImage = document.getElementById("tweetImage")
+    var fileInput = document.getElementById("fileInput");
+    if (!fileInput.value) {
+        var tweet = document.getElementById("usertext").value;
+        axios({
+            method: "POST",
+            url: "http://localhost:3001/profilePOST",
+            // headers: { 'Content-Type': 'multipart/form-data' },
+            data: {
+                tweet: tweet,
+            }
+        })
+    } else {
+        let formData = new FormData();
+        // formData.append("myFile", fileInput.files[0]);
+        formData.append("myFile", fileInput.files[0]);
+        axios({
+            method: 'post',
+            url:"http://localhost:3001/profilePOSTimage",
+            data: formData,
+            headers: { 'Content-Type': 'multipart/form-data' }
+        })
+            .then((res) => {
+                console.log(res, "uplodddddd");
+
+
+
+
+            }).catch((error) => {
+                console.log(error.message);
+            })
+    }
+    // upload()
     // return false;
 }
 
@@ -282,7 +314,7 @@ function realtimechat() {
             var post = document.getElementById('welcomeUser')
             var litext = document.createElement('li')
             litext.setAttribute("class", "democlass");
-            var litex=document.createTextNode(`" name=> "${loop[i].name} " message=> " ${loop[i].msg}" time=> "${moment(loop[i].createdOn).fromNow()}`);
+            var litex = document.createTextNode(`${loop[i].name} "===>" ${loop[i].msg}"===>" ${moment(loop[i].createdOn).fromNow()}`);
             litext.appendChild(litex);
             post.appendChild(litext);
         }
@@ -303,24 +335,15 @@ function realtimechat() {
 function upload() {
 
     var fileInput = document.getElementById("fileInput");
-
-    // // To convert a File into Blob (not recommended)
-    // var blob = null;
-    // var file = fileInput.files[0];
-    // let reader = new FileReader();
-    // reader.readAsArrayBuffer(file)
-    // reader.onload = function (e) {
-    //     blob = new Blob([new Uint8Array(e.target.result)], { type: file.type });
-    //     console.log(blob);
-    // }
-
     console.log("fileInput: ", fileInput);
     console.log("fileInput: ", fileInput.files[0]);
 
     let formData = new FormData();
     // https://developer.mozilla.org/en-US/docs/Web/API/FormData/append#syntax
 
-    formData.append("myFile", fileInput.files[0]); // file input is for browser only, use fs to read file in nodejs client
+    formData.append("myFile", fileInput.files[0]);
+
+    // file input is for browser only, use fs to read file in nodejs client
     // formData.append("myFile", blob, "myFileNameAbc"); // you can also send file in Blob form (but you really dont need to covert a File into blob since it is Actually same, Blob is just a new implementation and nothing else, and most of the time (as of january 2021) when someone function says I accept Blob it means File or Blob) see: https://stackoverflow.com/questions/33855167/convert-data-file-to-blob
     formData.append("myName", "malik"); // this is how you add some text data along with file
     formData.append("myDetails",
@@ -341,6 +364,8 @@ function upload() {
         .then(res => {
 
             console.log(`upload Success` + JSON.stringify(res.data));
+            document.getElementById("myProfile").src = res.data.profileUrl;
+            document.getElementById("profilePic").src = res.data.profileUrl;
         })
         .catch(err => {
             console.log(err);
