@@ -56,8 +56,9 @@ socket.on("chat-connect", (data) => {
     console.log(data.createdOn, "time");
     console.log(data.msg, "message");
     console.log(data.name, "name");
+    console.log(data.profileUrl, "data");
     console.log(data, "data");
-    // }
+     // }
     // console.log(response.data.tweet, "realtimechat");
 
     // var post = document.getElementById('posts')
@@ -70,6 +71,17 @@ socket.on("chat-connect", (data) => {
     // console.log(newPOST.email);
     // console.log(newPOST.name);
 })
+
+// socket.on("chat-with-image", (newPOST) => {
+//     console.log("image => ", newPost);
+// })
+// io.emit("chat-img", data)
+// socket.on("chat-img", (img) => {
+// console.log("chat-img");
+// })
+
+
+
 
 const sub = () => {
     let namei = document.getElementById("name").value
@@ -224,9 +236,10 @@ function getProfile() {
                 // console.log(data, "Dasdsad");
                 // document.getElementById("myProfile").src = data.profile.profileUrl;
                 // if (Http.status === 200) {
-                var date = moment(new Date("03/25/2015")).fromNow();
-                data = JSON.parse((Http.responseText));
-                // document.getElementById("fileInput").style.display = "none";
+                    var date = moment(new Date("03/25/2015")).fromNow();
+                    data = JSON.parse((Http.responseText));
+                    // document.getElementById("fileInput").style.display = "none";
+                    console.log("getdata",data);
                 document.getElementById("profilePic").src = data.profile.profileUrl;
                 document.getElementById("myProfile").src = data.profile.profileUrl;
                 document.getElementById("username").innerHTML = data.profile.name
@@ -257,11 +270,51 @@ function getProfile() {
 
 
 // user=>app=>serverv
+// function profilePOST() {
+//     // tweetImage = document.getElementById("tweetImage")
+//     var fileInput = document.getElementById("fileInput");
+//     var tweet = document.getElementById("usertext").value;
+//     if (!fileInput.value) {
+//         axios({
+//             method: "POST",
+//             url: "http://localhost:3001/profilePOST",
+//             // headers: { 'Content-Type': 'multipart/form-data' },
+//             data: {
+//                 tweet: tweet,
+//             }
+//         })
+//     } else {
+//         let formData = new FormData();
+//         // formData.append("myFile", fileInput.files[0]);
+//         formData.append("myFile", fileInput.files[0]);
+//         formData.append("tweet",tweet)
+//         axios({
+//             method: 'post',
+//             url: "http://localhost:3001/profilePOSTimage",
+//             data: {
+//                 formData: formData,
+//             }
+//             ,
+//             headers: { 'Content-Type': 'multipart/form-data' }
+//         })
+//             .then((res) => {
+//                 console.log(res, "uplodddddd");
+
+
+
+
+//             }).catch((error) => {
+//                 console.log(error.message);
+//             })
+//     }
+//     // upload()
+//     // return false;
+// }
 function profilePOST() {
-    // tweetImage = document.getElementById("tweetImage")
-    var fileInput = document.getElementById("fileInput");
-    if (!fileInput.value) {
-        var tweet = document.getElementById("usertext").value;
+    var tweet = document.getElementById("usertext").value
+    // var fileInput = document.getElementById("fileInput");
+    var tweet = document.getElementById("usertext").value;
+    // if (!fileInput.value) {
         axios({
             method: "POST",
             url: "http://localhost:3001/profilePOST",
@@ -270,33 +323,48 @@ function profilePOST() {
                 tweet: tweet,
             }
         })
-    } else {
-        let formData = new FormData();
-        // formData.append("myFile", fileInput.files[0]);
-        formData.append("myFile", fileInput.files[0]);
-        axios({
-            method: 'post',
-            url: "http://localhost:3001/profilePOSTimage",
-            data: {
-                formData: formData,
-                tweet: tweet,
-            }
-            ,
-            headers: { 'Content-Type': 'multipart/form-data' }
-        })
-            .then((res) => {
-                console.log(res, "uplodddddd");
-
-
-
-
-            }).catch((error) => {
-                console.log(error.message);
-            })
     }
-    // upload()
-    // return false;
-}
+    // else {
+    //     var tweet = document.getElementById("usertext").value
+    //     var fileInput = document.getElementById("fileInput");
+    //     console.log("fileInput: ", fileInput);
+    //     console.log("fileInput: ", fileInput.files[0]);
+
+    //     let formData = new FormData();
+    //     // https://developer.mozilla.org/en-US/docs/Web/API/FormData/append#syntax
+
+    //     formData.append("myFile", fileInput.files[0]);
+
+    //     // file input is for browser only, use fs to read file in nodejs client
+    //     // formData.append("myFile", blob, "myFileNameAbc"); // you can also send file in Blob form (but you really dont need to covert a File into blob since it is Actually same, Blob is just a new implementation and nothing else, and most of the time (as of january 2021) when someone function says I accept Blob it means File or Blob) see: https://stackoverflow.com/questions/33855167/convert-data-file-to-blob
+    //     formData.append("myName", "malik"); // this is how you add some text data along with file
+    //     formData.append("myDetails",
+    //         JSON.stringify({
+    //             // "userEmail": sessionStorage.getItem("userEmail"),
+    //             "subject": "Science",   // this is how you send a json object along with file, you need to stringify (ofcourse you need to parse it back to JSON on server) your json Object since append method only allows either USVString or Blob(File is subclass of blob so File is also allowed)
+    //             "year": "2021"
+    //         })
+    //     );
+    //     axios({
+    //         method: 'post',
+    //         url: "http://localhost:3001/upload",
+    //         data: { formData, tweet: tweet, },
+    //         headers: { 'Content-Type': 'multipart/form-data' }
+    //     })
+    //         .then(res => {
+
+    //             console.log(`upload Success` + JSON.stringify(res.data));
+    //             // document.getElementById("myProfile").src = res.data.profileUrl;
+    //             // document.getElementById("profilePic").src = res.data.profileUrl;
+    //         })
+    //         .catch(err => {
+    //             console.log(err);
+    //         })
+    //     return false;
+    // }
+// }
+// upload()
+// return false;
 
 
 // ==================

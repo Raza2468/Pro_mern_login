@@ -101,12 +101,13 @@ appxml.use(function (req, res, next) {
 
 
 // ==========================================>Start Get Profile /////
-appxml.get("/getProfile", (req, res, next) => {
+appxml.get("/getProfile", upload.any(), (req, res, next) => {
     console.log("my tweets user=>", req.body);
     getUser.findById(req.body.jToken.id,
         // getUser.findById({ email: req.body.jToken.email },
         (err, doc) => {
             if (!err) {
+                console.log(doc,"FSAfsafas");
                 res.send({
                     profile: doc
                 })
@@ -121,207 +122,220 @@ appxml.get("/getProfile", (req, res, next) => {
 
 
 appxml.post("/profilePOST", upload.any(), (req, res, next) => {
-    // getUser.findById(req.headers.jToken.id, (err, userData) => {
-    //     getUser.update({ profileUrl: urlData[0] }, (err, updated) => {
-    //         if (!err) {
-    //             res.status(200).send({
-    //                 profileUrl: urlData[0],
-    //             })
-    //             console.log(profileUrl,"profileUrlprofileUrl");
-    //         }
-    //     })
-    // })
-    console.log(req.body.jToken.id)
     console.log(req.body.tweet)
-    // if (!req.body.name || !req.body.email || !req.body.tweet) {
-
     console.log("req body of tweet ", req.body);
-    if (!req.body.tweet) {
-        res.status(409).send(`
+    // if (!req.body.formData) {
+        if (!req.body.tweet) {
+            res.status(409).send(`
                 Please send useremail and tweet in json body
                 e.g:
                 "name": "name",
                 "email": "abc@gmail.com",
                 "text": "abc"
             `)
-        return;
-    };
+            return;
+        };
+        getUser.findById(req.body.jToken.id,
+            console.log(req.body),
+            (err, user) => {
+                if (!err) {
+                    console.log("tweet user : " + user);
+                    tweet.create({
+                        name: user.name,
+                        email: user.email,
+                        msg: req.body.tweet,
+                        profileUrl: user.profileUrl,
+                    }).then((data) => {
+                        console.log("Tweet creaxcvxcvxvted;': " + user),
 
+                            res.status(200).send({
+                                msg: req.body.tweet,
+                                name: data.name,
+                                email: data.email,
+                                profileUrl: data.profileUrl,
+                            });
 
-    getUser.findById(req.body.jToken.id,
-        console.log(req.body),
-        (err, user) => {
-            if (!err) {
-                console.log("tweet user : " + user);
-                tweet.create({
-                    name: user.name,
-                    email: user.email,
-                    msg: req.body.tweet,
-                }).then((data) => {
-                    console.log("Tweet creaxcvxcvxvted;': " + data),
-
-                        res.status(200).send({
-                            msg: req.body.tweet,
-                            name: data.name,
-                            email: data.email,
-                            // profileUrl: user.profileUrl,
+                        io.emit("chat-connect", data)
+                        // io.emit("chat-img", user)
+                    }).catch((err) => {
+                        res.status(500).send({
+                            message: "an error occured : " + err,
                         });
-                
-                    io.emit("chat-connect", data)
-                    // io.emit("chat-connect", data)
-                }).catch((err) => {
-                    res.status(500).send({
-                        message: "an error occured : " + err,
                     });
-                });
-            }
-            else {
-                res.status.send({
-                    message: "an error occured" + err,
-                })
-            }
-        })
-});
+                }
+                // else {
+                //     console.log("tweet user : " + user);
+                //     tweet.create({
+                //         name: user.name,
+                //         email: user.email,
+                //         msg: req.body.tweet,
+                //         profileUrl: user.profileUrl,
+                //     }).then((data) => {
+                //         console.log("Tweet creaxcvxcvxvted;': " + user),
+
+                //             res.status(200).send({
+                //                 msg: req.body.tweet,
+                //                 name: data.name,
+                //                 email: data.email,
+                //                 profileUrl: data.profileUrl,
+                //             });
+
+                //         io.emit("chat-connect", data)
+                //         // io.emit("chat-img", user)
+                //     }).catch((err) => {
+                //         res.status(500).send({
+                //             message: "an error occured : " + err,
+                //         });
+                //     });
+                //             }
+                //         }
+                //         )
 
 
-appxml.get('/realtimechat', upload.any(), (req, res, next) => {
-
-    tweet.find({}, (err, data) => {
-        if (!err) {
-            console.log("tweetdata=====>", data);
-            res.send({
-                tweet: data,
-                // profileUrl: urlData[0],
-            });
-        }
-        else {
-            console.log("error : ", err);
-            res.status(500).send("error");
-        }
-    })
-});
+                }
+            // }
+        );
+            })
 
 
+        appxml.get('/realtimechat', upload.any(), (req, res, next) => {
 
-var PORT = process.env.PORT || 3001
-
-var server = http.createServer(appxml);
-var io = socketIo(server, { cors: { origin: "*", methods: "*", } });
-
-
-
-appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.single. see https://github.com/expressjs/multer/issues/799#issuecomment-586526877
-
-    bucket.upload(
-        req.files[0].path,
-        function (err, file, apiResponse) {
-            if (!err) {
-                file.getSignedUrl({
-                    action: 'read',
-                    expires: '03-09-2491'
-                }).then((urlData, err) => {
-                    if (!err) {
-                        getUser.findById(req.headers.jToken.id, (err, userData) => {
-                            userData.update({ profileUrl: urlData[0] }, (err, updated) => {
-                                if (!err) {
-                                    res.status(200).send({
-                                        profileUrl: urlData[0],
-                                    })
-                                }
-                            })
-                        })
-                    }
-                })
-            } else {
-                console.log("err: ", err)
-                res.status(500).send();
-            }
+            tweet.find({}, (err, data) => {
+                if (!err) {
+                    console.log("tweetdata=====>", data);
+                    res.send({
+                        tweet: data,
+                        // profileUrl: urlData[0],
+                    });
+                }
+                else {
+                    console.log("error : ", err);
+                    res.status(500).send("error");
+                }
+            })
         });
-})
 
-appxml.post('/profilePOSTimage', upload.any(), (req, res, next) => {
-    
-   
 
-    
-    bucket.upload(
-        req.files[0].path,
-        // {
-        //     destination: `${new Date().getTime()}-new-image.png`, // give destination name if you want to give a certain name to file in bucket, include date to make name unique otherwise it will replace previous file with the same name
-        // },
-        function (err, file, apiResponse) {
-            if (!err) {
-                // console.log("api resp: ", apiResponse);
 
-                // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
-                file.getSignedUrl({
-                    action: 'read',
-                    expires: '03-09-2491'
-                }).then((urlData, err) => {
+        var PORT = process.env.PORT || 3001
+
+        var server = http.createServer(appxml);
+        var io = socketIo(server, { cors: { origin: "*", methods: "*", } });
+
+
+
+        appxml.post("/upload", upload.any(), (req, res, next) => {  // never use upload.single. see https://github.com/expressjs/multer/issues/799#issuecomment-586526877
+
+            bucket.upload(
+                req.files[0].path,
+                function (err, file, apiResponse) {
                     if (!err) {
-                        getUser.findById(req.headers.jToken.id,
-                            (err, data) => {
-                                if (!err) {
-                                    // console.log("tweet user : " + user);
-                                    tweet.create({
-                                        name: data.name,
-                                        email: data.email,
-                                        msg: req.body.tweet,
-                                        profileUrl: urlData[0]
-                                    }).then((data) => {
-                                        console.log("Tweet created: " + data),
-                                        // console.log("profile url is = > " , user.profileUrl);
-                                        // console.log("imgae url is == > ", urlData[0]);
-
-                                        res.status(200).send({
-                                            msg: req.body.tweet,
-                                            name: data.name,
-                                            email: data.email,
-                                            profileUrl: req.body.urlData[0],
-                                        });
-
-                                        io.emit("chat-connect", {
-                                            data: data,
-                                            profileUrl: req.body.urlData[0],
-                                        })
-                                    }).catch((err) => {
-                                        res.status(500).send({
-                                            message: "an error occured : " + err,
-                                        });
-                                    });
-                                }
-                                else {
-                                    res.status.send({
-                                        message: "an error occured" + err,
+                        file.getSignedUrl({
+                            action: 'read',
+                            expires: '03-09-2491'
+                        }).then((urlData, err) => {
+                            if (!err) {
+                                getUser.findById(req.headers.jToken.id, (err, userData) => {
+                                    userData.update({ profileUrl: urlData[0] }, (err, updated) => {
+                                        if (!err) {
+                                            res.status(200).send({
+                                                profileUrl: urlData[0],
+                                            })
+                                        }
                                     })
-                                }
+                                })
                             }
-                            )
-                        
-                        try {
-                            fs.unlinkSync(req.files[0].path)
-                            //file removed
-                        } catch (err) {
-                            console.error(err)
-                        }
-
+                        })
+                    } else {
+                        console.log("err: ", err)
+                        res.status(500).send();
                     }
-                })
-            } else {
-                console.log("err: ", err)
-                res.status(500).send();
-            }
+                });
         })
-    })
 
-    // ==========================================>Server /////
+        // appxml.post('/profilePOSTimage', upload.any(), (req, res, next) => {
+
+        // console.log(req.body.tweet,"dadadadadad");
+
+
+        //     bucket.upload(
+        //         req.files[0].path,
+        //         // {
+        //         //     destination: `${new Date().getTime()}-new-image.png`, // give destination name if you want to give a certain name to file in bucket, include date to make name unique otherwise it will replace previous file with the same name
+        //         // },
+        //         function (err, file, apiResponse) {
+        //             if (!err) {
+        //                 // console.log("api resp: ", apiResponse);
+
+        //                 // https://googleapis.dev/nodejs/storage/latest/Bucket.html#getSignedUrl
+        //                 file.getSignedUrl({
+        //                     action: 'read',
+        //                     expires: '03-09-2491'
+        //                 }).then((urlData, err) => {
+        //                     if (!err) {
+        //                         getUser.findById(req.headers.jToken.id,
+        //                             (err, data) => {
+        //                                 if (!err) {
+        //                                     // console.log("tweet user : " + user);
+        //                                     tweet.create({
+        //                                         name: data.name,
+        //                                         email: data.email,
+        //                                         msg: req.body.tweet,
+        //                                         // profileUrl: urlData[0]
+        //                                     }).then((data) => {
+        //                                         console.log("Tweet created: " + data),
+        //                                         // console.log("profile url is = > " , user.profileUrl);
+        //                                         // console.log("imgae url is == > ", urlData[0]);
+
+        //                                         res.status(200).send({
+        //                                             msg: req.body.tweet,
+        //                                             name: data.name,
+        //                                             email: data.email,
+        //                                             profileUrl: req.body.urlData[0],
+        //                                         });
+
+        //                                         io.emit("chat-connect", {
+        //                                             data: data,
+        //                                             profileUrl: req.body.urlData[0],
+        //                                         })
+        //                                     }).catch((err) => {
+        //                                         res.status(500).send({
+        //                                             message: "an error occured : " + err,
+        //                                         });
+        //                                     });
+        //                                 }
+        //                                 else {
+        //                                     res.status.send({
+        //                                         message: "an error occured" + err,
+        //                                     })
+        //                                 }
+        //                             }
+        //                             )
+
+        //                         try {
+        //                             fs.unlinkSync(req.files[0].path)
+        //                             //file removed
+        //                         } catch (err) {
+        //                             console.error(err)
+        //                         }
+
+        //                     }
+        //                 })
+        //             } else {
+        //                 console.log("err: ", err)
+        //                 res.status(500).send();
+        //             }
+        //         })
+        //     })
+
+        // ==========================================>Server /////
 
 
 
 
-    server.listen(PORT, () => {
-        console.log("chal gya hai server", PORT)
-    })
+        server.listen(PORT, () => {
+            console.log("chal gya hai server", PORT)
+        })
 // ==========================================>Server End/////
 
 
