@@ -31,7 +31,7 @@ appxml.use(morgan('dev'));
 ////// For sending file to mongoose
 const fs = require('fs')
 const multer = require("multer");
-const admin = require("firebase-admin");
+// const admin = require("firebase-admin");
 //==============================================
 const storage = multer.diskStorage({ // https://www.npmjs.com/package/multer#diskstorage
     destination: './uploads/',
@@ -41,14 +41,14 @@ const storage = multer.diskStorage({ // https://www.npmjs.com/package/multer#dis
 })
 //==============================================
 var upload = multer({ storage: storage })
-var serviceAccount = require("./firebase/firebase.json");
+// var serviceAccount = require("./firebase/firebase.json");
 
-admin.initializeApp({
-    credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://delete-this-1329.firebaseio.com"
-});
+// admin.initializeApp({
+//     credential: admin.credential.cert(serviceAccount),
+//     databaseURL: "https://delete-this-1329.firebaseio.com"
+// });
 // const bucket = admin.storage().bucket("gs://delete-this-1329.appspot.com");
-const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
+// const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
 // mongodb+srv://faiz:2468@mundodb.lkd4g.mongodb.net/ttest?retryWrites=true&w=majority
 
 
@@ -56,7 +56,7 @@ const bucket = admin.storage().bucket("gs://firestore-28544.appspot.com");
 // appxml.use(cors());
 // appxml.use(bodyParser.urlencoded({ extended: true }));
 
-appxml.use("/", express.static(path.resolve(path.join(__dirname, "public"))));
+appxml.use("/", express.static(path.resolve(path.join(__dirname, "../Project/build"))));
 
 // =========================>
 

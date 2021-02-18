@@ -5,7 +5,7 @@
   "main": "serverxml.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cls && node serverxml.js"
+    "start": "node serverxml.js"
   },
   "author": "",
   "license": "ISC",
@@ -23,6 +23,7 @@
     "mongoose": "^5.11.10",
     "morgan": "^1.10.0",
     "multer": "^1.4.2",
+    "nodemon": "^2.0.7",
     "path": "^0.12.7",
     "postmark": "^2.7.0",
     "schema": "^0.2.1",
